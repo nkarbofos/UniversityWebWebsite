@@ -23,10 +23,10 @@ export class LinkGql {
   })
   reviewId?: string | null;
 
-  @Field({ description: 'Display name for the link' })
+  @Field(() => String, { description: 'Display name for the link' })
   linkName!: string;
 
-  @Field({ description: 'GitHub Pages URL' })
+  @Field(() => String, { description: 'GitHub Pages URL' })
   githubPagesUrl!: string;
 
   @Field(() => GraphQLISODateTime, { description: 'When the link was created' })
@@ -41,10 +41,10 @@ export class CreateLinkInput {
   @Field(() => ID, { nullable: true, description: 'Optional review id' })
   reviewId?: string;
 
-  @Field({ description: 'Display name for the link' })
+  @Field(() => String, { description: 'Display name for the link' })
   linkName!: string;
 
-  @Field({ description: 'GitHub Pages URL' })
+  @Field(() => String, { description: 'GitHub Pages URL' })
   githubPagesUrl!: string;
 }
 
@@ -56,10 +56,10 @@ export class UpdateLinkInput {
   @Field(() => ID, { nullable: true, description: 'Optional review id' })
   reviewId?: string;
 
-  @Field({ nullable: true, description: 'Display name for the link' })
+  @Field(() => String, { nullable: true, description: 'Display name for the link' })
   linkName?: string;
 
-  @Field({ nullable: true, description: 'GitHub Pages URL' })
+  @Field(() => String, { nullable: true, description: 'GitHub Pages URL' })
   githubPagesUrl?: string;
 }
 

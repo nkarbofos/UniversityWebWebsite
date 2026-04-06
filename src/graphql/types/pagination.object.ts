@@ -16,7 +16,7 @@ export class UserConnection {
   @Field(() => Int, { description: 'Maximum items per page' })
   pageSize!: number;
 
-  @Field({ description: 'Whether another page exists after this one' })
+  @Field(() => Boolean, { description: 'Whether another page exists after this one' })
   hasNext!: boolean;
 }
 
@@ -31,7 +31,7 @@ export class LinkConnection {
   @Field(() => Int, { description: 'Maximum items per page' })
   pageSize!: number;
 
-  @Field({ description: 'Whether another page exists after this one' })
+  @Field(() => Boolean, { description: 'Whether another page exists after this one' })
   hasNext!: boolean;
 }
 
@@ -46,7 +46,7 @@ export class ReviewConnection {
   @Field(() => Int, { description: 'Maximum items per page' })
   pageSize!: number;
 
-  @Field({ description: 'Whether another page exists after this one' })
+  @Field(() => Boolean, { description: 'Whether another page exists after this one' })
   hasNext!: boolean;
 }
 
@@ -61,7 +61,7 @@ export class TagConnection {
   @Field(() => Int, { description: 'Maximum items per page' })
   pageSize!: number;
 
-  @Field({ description: 'Whether another page exists after this one' })
+  @Field(() => Boolean, { description: 'Whether another page exists after this one' })
   hasNext!: boolean;
 }
 
@@ -76,6 +76,6 @@ export class CourseConnection {
   @Field(() => Int, { description: 'Maximum items per page' })
   pageSize!: number;
 
-  @Field({ description: 'Whether another page exists after this one' })
+  @Field(() => Boolean, { description: 'Whether another page exists after this one' })
   hasNext!: boolean;
 }

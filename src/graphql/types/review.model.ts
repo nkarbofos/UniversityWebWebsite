@@ -19,7 +19,7 @@ export class ReviewGql {
   @Field(() => Int, { nullable: true, description: 'Numeric score (0–100)' })
   score?: number | null;
 
-  @Field({ nullable: true, description: 'Free-text comment' })
+  @Field(() => String, { nullable: true, description: 'Free-text comment' })
   comment?: string | null;
 }
 
@@ -31,7 +31,7 @@ export class CreateReviewInput {
   @Field(() => Int, { nullable: true, description: 'Numeric score (0–100)' })
   score?: number;
 
-  @Field({ nullable: true, description: 'Free-text comment' })
+  @Field(() => String, { nullable: true, description: 'Free-text comment' })
   comment?: string;
 }
 
@@ -43,7 +43,7 @@ export class UpdateReviewInput {
   @Field(() => Int, { nullable: true, description: 'Numeric score (0–100)' })
   score?: number;
 
-  @Field({ nullable: true, description: 'Free-text comment' })
+  @Field(() => String, { nullable: true, description: 'Free-text comment' })
   comment?: string;
 }
 

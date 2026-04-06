@@ -13,28 +13,28 @@ export class CourseGql {
   @Field(() => ID, { description: 'Unique course identifier (UUID)' })
   id!: string;
 
-  @Field({ description: 'Course title' })
+  @Field(() => String, { description: 'Course title' })
   name!: string;
 
-  @Field({ nullable: true, description: 'Optional course code' })
+  @Field(() => String, { nullable: true, description: 'Optional course code' })
   code?: string | null;
 }
 
 @InputType({ description: 'Payload to create a course' })
 export class CreateCourseInput {
-  @Field({ description: 'Course title' })
+  @Field(() => String, { description: 'Course title' })
   name!: string;
 
-  @Field({ nullable: true, description: 'Optional course code' })
+  @Field(() => String, { nullable: true, description: 'Optional course code' })
   code?: string;
 }
 
 @InputType({ description: 'Payload to update a course' })
 export class UpdateCourseInput {
-  @Field({ nullable: true, description: 'Course title' })
+  @Field(() => String, { nullable: true, description: 'Course title' })
   name?: string;
 
-  @Field({ nullable: true, description: 'Optional course code' })
+  @Field(() => String, { nullable: true, description: 'Optional course code' })
   code?: string;
 }
 

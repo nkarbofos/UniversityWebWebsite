@@ -8,16 +8,16 @@ export class UserGql {
   @Field(() => ID, { description: 'Unique user identifier (UUID)' })
   id!: string;
 
-  @Field({ description: 'Email address (unique)' })
+  @Field(() => String, { description: 'Email address (unique)' })
   email!: string;
 
-  @Field({ description: 'Given name' })
+  @Field(() => String, { description: 'Given name' })
   firstName!: string;
 
-  @Field({ description: 'Family name' })
+  @Field(() => String, { description: 'Family name' })
   lastName!: string;
 
-  @Field({ description: 'Telegram profile URL' })
+  @Field(() => String, { description: 'Telegram profile URL' })
   telegramUrl!: string;
 
   @Field(() => GraphQLISODateTime, { description: 'Record creation time' })
@@ -29,31 +29,31 @@ export class UserGql {
 
 @InputType({ description: 'Payload to create a user' })
 export class CreateUserInput {
-  @Field({ description: 'Email address' })
+  @Field(() => String, { description: 'Email address' })
   email!: string;
 
-  @Field({ description: 'Given name' })
+  @Field(() => String, { description: 'Given name' })
   firstName!: string;
 
-  @Field({ description: 'Family name' })
+  @Field(() => String, { description: 'Family name' })
   lastName!: string;
 
-  @Field({ description: 'Telegram profile URL' })
+  @Field(() => String, { description: 'Telegram profile URL' })
   telegramUrl!: string;
 }
 
 @InputType({ description: 'Payload to update a user (all fields optional)' })
 export class UpdateUserInput {
-  @Field({ nullable: true, description: 'Email address' })
+  @Field(() => String, { nullable: true, description: 'Email address' })
   email?: string;
 
-  @Field({ nullable: true, description: 'Given name' })
+  @Field(() => String, { nullable: true, description: 'Given name' })
   firstName?: string;
 
-  @Field({ nullable: true, description: 'Family name' })
+  @Field(() => String, { nullable: true, description: 'Family name' })
   lastName?: string;
 
-  @Field({ nullable: true, description: 'Telegram profile URL' })
+  @Field(() => String, { nullable: true, description: 'Telegram profile URL' })
   telegramUrl?: string;
 }
 

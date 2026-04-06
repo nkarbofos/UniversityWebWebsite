@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import {
   createComplexityRule,
   simpleEstimator,
@@ -25,7 +24,6 @@ import { LinksModule } from './links/links.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       path: '/graphql',
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
       validationRules: [
         createComplexityRule({
           maximumComplexity: 100,

@@ -13,19 +13,19 @@ export class TagGql {
   @Field(() => ID, { description: 'Unique tag identifier (UUID)' })
   id!: string;
 
-  @Field({ description: 'Unique tag name' })
+  @Field(() => String, { description: 'Unique tag name' })
   name!: string;
 }
 
 @InputType({ description: 'Payload to create a tag' })
 export class CreateTagInput {
-  @Field({ description: 'Unique tag name' })
+  @Field(() => String, { description: 'Unique tag name' })
   name!: string;
 }
 
 @InputType({ description: 'Payload to update a tag' })
 export class UpdateTagInput {
-  @Field({ nullable: true, description: 'New tag name' })
+  @Field(() => String, { nullable: true, description: 'New tag name' })
   name?: string;
 }
 
