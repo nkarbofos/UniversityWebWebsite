@@ -11,11 +11,14 @@ export function buildPaginationLinks(args: {
   const nextPage = hasNext ? page + 1 : null;
 
   if (prevPage) {
-    links.push(`<${baseUrl}?page=${prevPage}&pageSize=${pageSize}>; rel="prev"`);
+    links.push(
+      `<${baseUrl}?page=${prevPage}&pageSize=${pageSize}>; rel="prev"`,
+    );
   }
   if (nextPage) {
-    links.push(`<${baseUrl}?page=${nextPage}&pageSize=${pageSize}>; rel="next"`);
+    links.push(
+      `<${baseUrl}?page=${nextPage}&pageSize=${pageSize}>; rel="next"`,
+    );
   }
   return links.join(', ');
 }
-

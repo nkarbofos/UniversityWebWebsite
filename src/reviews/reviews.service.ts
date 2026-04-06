@@ -41,6 +41,20 @@ export class ReviewsService {
     return review;
   }
 
+  async findOneShallow(id: string) {
+    const review = await this.prisma.review.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        score: true,
+        comment: true,
+      },
+    });
+    if (!review) throw new NotFoundException('Review not found');
+    return review;
+  }
+
   update(id: string, dto: UpdateReviewDto) {
     return this.prisma.review.update({
       where: { id },
@@ -57,4 +71,3 @@ export class ReviewsService {
     return { ok: true };
   }
 }
-

@@ -41,6 +41,24 @@ export class UsersService {
     return user;
   }
 
+  /** Scalar fields only; for GraphQL field resolvers on nested data */
+  async findOneShallow(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        telegramUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
   async update(id: string, dto: UpdateUserDto) {
     return this.prisma.user.update({
       where: { id },
@@ -58,4 +76,3 @@ export class UsersService {
     return { ok: true };
   }
 }
-

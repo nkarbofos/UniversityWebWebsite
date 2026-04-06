@@ -14,4 +14,3 @@ export class CreateCourseDto {
   @MaxLength(255)
   code?: string;
 }
-

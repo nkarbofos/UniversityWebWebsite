@@ -10,7 +10,13 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import type { Response } from 'express';
@@ -51,7 +57,10 @@ export class CoursesApiController {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 50;
 
-    const { items, hasNext } = await this.coursesService.findAll({ page, pageSize });
+    const { items, hasNext } = await this.coursesService.findAll({
+      page,
+      pageSize,
+    });
     const link = buildPaginationLinks({
       baseUrl: '/api/courses',
       page,
@@ -96,4 +105,3 @@ export class CoursesApiController {
     return this.coursesService.remove(id);
   }
 }
-

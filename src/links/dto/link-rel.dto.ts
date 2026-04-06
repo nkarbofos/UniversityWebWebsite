@@ -6,4 +6,3 @@ export class LinkRelDto {
   @IsUUID()
   id!: string;
 }
-

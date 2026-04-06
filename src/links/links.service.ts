@@ -82,6 +82,68 @@ export class LinksService {
     return link;
   }
 
+  async findOneShallow(id: string) {
+    const link = await this.prisma.link.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        reviewId: true,
+        linkName: true,
+        githubPagesUrl: true,
+        createdAt: true,
+      },
+    });
+    if (!link) throw new NotFoundException('Link not found');
+    return link;
+  }
+
+  async findManyForUser(userId: string) {
+    return this.prisma.link.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        userId: true,
+        reviewId: true,
+        linkName: true,
+        githubPagesUrl: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async findManyForReview(reviewId: string) {
+    return this.prisma.link.findMany({
+      where: { reviewId },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        userId: true,
+        reviewId: true,
+        linkName: true,
+        githubPagesUrl: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async findTagsForLink(linkId: string) {
+    const rows = await this.prisma.linkTag.findMany({
+      where: { linkId },
+      include: { tag: true },
+    });
+    return rows.map((r) => r.tag);
+  }
+
+  async findCoursesForLink(linkId: string) {
+    const rows = await this.prisma.linkCourse.findMany({
+      where: { linkId },
+      include: { course: true },
+    });
+    return rows.map((r) => r.course);
+  }
+
   update(id: string, dto: UpdateLinkDto) {
     return this.prisma.link.update({
       where: { id },
@@ -126,18 +188,26 @@ export class LinksService {
   }
 
   private async ensureLinkExists(id: string) {
-    const exists = await this.prisma.link.findUnique({ where: { id }, select: { id: true } });
+    const exists = await this.prisma.link.findUnique({
+      where: { id },
+      select: { id: true },
+    });
     if (!exists) throw new NotFoundException('Link not found');
   }
 
   private async ensureTagExists(id: string) {
-    const exists = await this.prisma.tag.findUnique({ where: { id }, select: { id: true } });
+    const exists = await this.prisma.tag.findUnique({
+      where: { id },
+      select: { id: true },
+    });
     if (!exists) throw new NotFoundException('Tag not found');
   }
 
   private async ensureCourseExists(id: string) {
-    const exists = await this.prisma.course.findUnique({ where: { id }, select: { id: true } });
+    const exists = await this.prisma.course.findUnique({
+      where: { id },
+      select: { id: true },
+    });
     if (!exists) throw new NotFoundException('Course not found');
   }
 }
-

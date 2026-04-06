@@ -10,7 +10,13 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import type { Response } from 'express';
@@ -44,11 +50,17 @@ export class TagsApiController {
   @ApiQuery({ name: 'pageSize', required: false })
   @ApiResponse({ status: 200 })
   @Get()
-  async findAll(@Query() query: TagsQueryDto, @Res({ passthrough: true }) res: Response) {
+  async findAll(
+    @Query() query: TagsQueryDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 50;
 
-    const { items, hasNext } = await this.tagsService.findAll({ page, pageSize });
+    const { items, hasNext } = await this.tagsService.findAll({
+      page,
+      pageSize,
+    });
     const link = buildPaginationLinks({
       baseUrl: '/api/tags',
       page,
@@ -78,7 +90,10 @@ export class TagsApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Patch(':id')
-  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() dto: UpdateTagDto) {
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateTagDto,
+  ) {
     return this.tagsService.update(id, dto);
   }
 
@@ -90,4 +105,3 @@ export class TagsApiController {
     return this.tagsService.remove(id);
   }
 }
-

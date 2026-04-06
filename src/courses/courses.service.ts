@@ -33,6 +33,34 @@ export class CoursesService {
     return course;
   }
 
+  async findOneShallow(id: string) {
+    const course = await this.prisma.course.findUnique({
+      where: { id },
+      select: { id: true, name: true, code: true },
+    });
+    if (!course) throw new NotFoundException('Course not found');
+    return course;
+  }
+
+  async findLinksForCourse(courseId: string) {
+    const rows = await this.prisma.linkCourse.findMany({
+      where: { courseId },
+      select: {
+        link: {
+          select: {
+            id: true,
+            userId: true,
+            reviewId: true,
+            linkName: true,
+            githubPagesUrl: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+    return rows.map((r) => r.link);
+  }
+
   update(id: string, dto: UpdateCourseDto) {
     return this.prisma.course.update({
       where: { id },
@@ -45,4 +73,3 @@ export class CoursesService {
     return { ok: true };
   }
 }
-

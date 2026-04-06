@@ -10,7 +10,13 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import type { Response } from 'express';
@@ -44,11 +50,17 @@ export class UsersApiController {
   @ApiQuery({ name: 'pageSize', required: false })
   @ApiResponse({ status: 200 })
   @Get()
-  async findAll(@Query() query: UsersQueryDto, @Res({ passthrough: true }) res: Response) {
+  async findAll(
+    @Query() query: UsersQueryDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 20;
 
-    const { items, hasNext } = await this.usersService.findAll({ page, pageSize });
+    const { items, hasNext } = await this.usersService.findAll({
+      page,
+      pageSize,
+    });
     const link = buildPaginationLinks({
       baseUrl: '/api/users',
       page,
@@ -78,7 +90,10 @@ export class UsersApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Patch(':id')
-  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() dto: UpdateUserDto) {
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateUserDto,
+  ) {
     return this.usersService.update(id, dto);
   }
 
@@ -90,4 +105,3 @@ export class UsersApiController {
     return this.usersService.remove(id);
   }
 }
-

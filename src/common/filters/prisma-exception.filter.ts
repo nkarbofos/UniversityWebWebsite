@@ -2,17 +2,26 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
+  HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { Prisma } from '@prisma/client';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-
     const map = this.mapError(exception);
+
+    if (host.getType<string>() === 'graphql') {
+      throw new HttpException(
+        map.body as Record<string, unknown>,
+        map.statusCode,
+      );
+    }
+
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
     response.status(map.statusCode).json(map.body);
   }
 
@@ -51,4 +60,3 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     }
   }
 }
-

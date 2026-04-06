@@ -8,4 +8,3 @@ export class CreateTagDto {
   @MaxLength(255)
   name!: string;
 }
-

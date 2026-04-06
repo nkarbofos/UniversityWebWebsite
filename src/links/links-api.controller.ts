@@ -10,7 +10,13 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsUUID, Max, Min } from 'class-validator';
 import type { Response } from 'express';
@@ -59,7 +65,10 @@ export class LinksApiController {
   @ApiQuery({ name: 'courseId', required: false })
   @ApiResponse({ status: 200 })
   @Get()
-  async findAll(@Query() query: LinksQueryDto, @Res({ passthrough: true }) res: Response) {
+  async findAll(
+    @Query() query: LinksQueryDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 20;
 
@@ -100,7 +109,10 @@ export class LinksApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Patch(':id')
-  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() dto: UpdateLinkDto) {
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateLinkDto,
+  ) {
     return this.linksService.update(id, dto);
   }
 
@@ -160,4 +172,3 @@ export class LinksApiController {
     return this.linksService.removeCourse(id, courseId);
   }
 }
-

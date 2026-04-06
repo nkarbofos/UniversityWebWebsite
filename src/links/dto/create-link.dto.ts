@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateLinkDto {
   @ApiProperty({ format: 'uuid' })
@@ -22,4 +29,3 @@ export class CreateLinkDto {
   @MaxLength(255)
   githubPagesUrl!: string;
 }
-

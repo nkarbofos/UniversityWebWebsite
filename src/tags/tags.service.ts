@@ -31,6 +31,34 @@ export class TagsService {
     return tag;
   }
 
+  async findOneShallow(id: string) {
+    const tag = await this.prisma.tag.findUnique({
+      where: { id },
+      select: { id: true, name: true },
+    });
+    if (!tag) throw new NotFoundException('Tag not found');
+    return tag;
+  }
+
+  async findLinksForTag(tagId: string) {
+    const rows = await this.prisma.linkTag.findMany({
+      where: { tagId },
+      select: {
+        link: {
+          select: {
+            id: true,
+            userId: true,
+            reviewId: true,
+            linkName: true,
+            githubPagesUrl: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+    return rows.map((r) => r.link);
+  }
+
   update(id: string, dto: UpdateTagDto) {
     return this.prisma.tag.update({
       where: { id },
@@ -43,4 +71,3 @@ export class TagsService {
     return { ok: true };
   }
 }
-
