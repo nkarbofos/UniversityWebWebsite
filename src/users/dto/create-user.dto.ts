@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUrl,
   MaxLength,
@@ -25,8 +26,9 @@ export class CreateUserDto {
   @MaxLength(255)
   lastName!: string;
 
-  @ApiProperty({ example: 'https://t.me/username' })
+  @ApiProperty({ example: 'https://t.me/username', required: false })
+  @IsOptional()
   @IsUrl({ require_protocol: true })
   @MaxLength(255)
-  telegramUrl!: string;
+  telegramUrl?: string;
 }

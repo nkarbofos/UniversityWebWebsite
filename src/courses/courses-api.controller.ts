@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -24,6 +25,9 @@ import { buildPaginationLinks } from '../common/pagination/pagination';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { CoursesService } from './courses.service';
+import { PublicAccess } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '@prisma/client';
 
 class CoursesQueryDto {
   @IsOptional()
@@ -49,6 +53,8 @@ export class CoursesApiController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'pageSize', required: false })
   @ApiResponse({ status: 200 })
+  @Header('Cache-Control', 'public, max-age=3600')
+  @PublicAccess()
   @Get()
   async findAll(
     @Query() query: CoursesQueryDto,
@@ -81,6 +87,8 @@ export class CoursesApiController {
   @ApiOperation({ summary: 'Get course by id' })
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
+  @Header('Cache-Control', 'public, max-age=3600')
+  @PublicAccess()
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.coursesService.findOne(id);
@@ -101,6 +109,7 @@ export class CoursesApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.coursesService.remove(id);
   }

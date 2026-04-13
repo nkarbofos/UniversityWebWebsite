@@ -17,8 +17,17 @@ export class UserGql {
   @Field(() => String, { description: 'Family name' })
   lastName!: string;
 
-  @Field(() => String, { description: 'Telegram profile URL' })
-  telegramUrl!: string;
+  @Field(() => String, {
+    nullable: true,
+    description: 'Telegram profile URL (optional)',
+  })
+  telegramUrl?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Public URL of user avatar stored in object storage',
+  })
+  avatarUrl?: string | null;
 
   @Field(() => GraphQLISODateTime, { description: 'Record creation time' })
   createdAt!: Date;
@@ -38,8 +47,11 @@ export class CreateUserInput {
   @Field(() => String, { description: 'Family name' })
   lastName!: string;
 
-  @Field(() => String, { description: 'Telegram profile URL' })
-  telegramUrl!: string;
+  @Field(() => String, {
+    nullable: true,
+    description: 'Telegram profile URL (optional)',
+  })
+  telegramUrl?: string;
 }
 
 @InputType({ description: 'Payload to update a user (all fields optional)' })
@@ -53,7 +65,10 @@ export class UpdateUserInput {
   @Field(() => String, { nullable: true, description: 'Family name' })
   lastName?: string;
 
-  @Field(() => String, { nullable: true, description: 'Telegram profile URL' })
+  @Field(() => String, {
+    nullable: true,
+    description: 'Telegram profile URL (optional)',
+  })
   telegramUrl?: string;
 }
 

@@ -24,6 +24,9 @@ import { buildPaginationLinks } from '../common/pagination/pagination';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewsService } from './reviews.service';
+import { PublicAccess } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '@prisma/client';
 
 class ReviewsQueryDto {
   @IsOptional()
@@ -49,6 +52,7 @@ export class ReviewsApiController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'pageSize', required: false })
   @ApiResponse({ status: 200 })
+  @PublicAccess()
   @Get()
   async findAll(
     @Query() query: ReviewsQueryDto,
@@ -81,6 +85,7 @@ export class ReviewsApiController {
   @ApiOperation({ summary: 'Get review by id' })
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
+  @PublicAccess()
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.reviewsService.findOne(id);
@@ -101,6 +106,7 @@ export class ReviewsApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.reviewsService.remove(id);
   }

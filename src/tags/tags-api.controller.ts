@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -10,6 +11,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import {
   ApiOperation,
   ApiParam,
@@ -20,10 +22,14 @@ import {
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import type { Response } from 'express';
+import { UseInterceptors } from '@nestjs/common';
 import { buildPaginationLinks } from '../common/pagination/pagination';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { TagsService } from './tags.service';
+import { PublicAccess } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '@prisma/client';
 
 class TagsQueryDto {
   @IsOptional()
@@ -49,6 +55,10 @@ export class TagsApiController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'pageSize', required: false })
   @ApiResponse({ status: 200 })
+  @Header('Cache-Control', 'public, max-age=3600')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(5)
+  @PublicAccess()
   @Get()
   async findAll(
     @Query() query: TagsQueryDto,
@@ -81,6 +91,10 @@ export class TagsApiController {
   @ApiOperation({ summary: 'Get tag by id' })
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
+  @Header('Cache-Control', 'public, max-age=3600')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(5)
+  @PublicAccess()
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.tagsService.findOne(id);
@@ -101,6 +115,7 @@ export class TagsApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.tagsService.remove(id);
   }

@@ -56,7 +56,10 @@ export class UpdateLinkInput {
   @Field(() => ID, { nullable: true, description: 'Optional review id' })
   reviewId?: string;
 
-  @Field(() => String, { nullable: true, description: 'Display name for the link' })
+  @Field(() => String, {
+    nullable: true,
+    description: 'Display name for the link',
+  })
   linkName?: string;
 
   @Field(() => String, { nullable: true, description: 'GitHub Pages URL' })

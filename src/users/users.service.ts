@@ -13,7 +13,7 @@ export class UsersService {
         email: dto.email,
         firstName: dto.firstName,
         lastName: dto.lastName,
-        telegramUrl: dto.telegramUrl,
+        telegramUrl: dto.telegramUrl ?? null,
       },
     });
   }
@@ -51,6 +51,7 @@ export class UsersService {
         firstName: true,
         lastName: true,
         telegramUrl: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -66,7 +67,39 @@ export class UsersService {
         email: dto.email,
         firstName: dto.firstName,
         lastName: dto.lastName,
-        telegramUrl: dto.telegramUrl,
+        telegramUrl: dto.telegramUrl ?? null,
+      },
+    });
+  }
+
+  async setAvatarUrl(id: string, avatarUrl: string) {
+    return this.prisma.user.update({
+      where: { id },
+      data: { avatarUrl },
+    });
+  }
+
+  async upsertByFirebaseUid(args: {
+    firebaseUid: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    telegramUrl?: string;
+  }) {
+    return this.prisma.user.upsert({
+      where: { firebaseUid: args.firebaseUid },
+      create: {
+        firebaseUid: args.firebaseUid,
+        email: args.email,
+        firstName: args.firstName,
+        lastName: args.lastName,
+        telegramUrl: args.telegramUrl ?? null,
+      },
+      update: {
+        email: args.email,
+        firstName: args.firstName,
+        lastName: args.lastName,
+        telegramUrl: args.telegramUrl ?? null,
       },
     });
   }

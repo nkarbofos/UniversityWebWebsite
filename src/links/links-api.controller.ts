@@ -24,6 +24,9 @@ import { buildPaginationLinks } from '../common/pagination/pagination';
 import { CreateLinkDto } from './dto/create-link.dto';
 import { UpdateLinkDto } from './dto/update-link.dto';
 import { LinksService } from './links.service';
+import { PublicAccess } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '@prisma/client';
 
 class LinksQueryDto {
   @IsOptional()
@@ -64,6 +67,7 @@ export class LinksApiController {
   @ApiQuery({ name: 'tagId', required: false })
   @ApiQuery({ name: 'courseId', required: false })
   @ApiResponse({ status: 200 })
+  @PublicAccess()
   @Get()
   async findAll(
     @Query() query: LinksQueryDto,
@@ -100,6 +104,7 @@ export class LinksApiController {
   @ApiOperation({ summary: 'Get link by id' })
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
+  @PublicAccess()
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.linksService.findOne(id);
@@ -120,6 +125,7 @@ export class LinksApiController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.linksService.remove(id);
   }
