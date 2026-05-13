@@ -16,6 +16,7 @@ export function useApi() {
 
       // If body is FormData, don't set Content-Type manually (browser will set boundary).
       const res = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
+
       if (res.status === 304) throw new Error('Not Modified');
       if (!res.ok) {
         const text = await res.text().catch(() => '');

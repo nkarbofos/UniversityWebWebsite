@@ -33,7 +33,6 @@ export class AuthService {
       .catch(() => null);
     if (!decoded?.uid) throw new UnauthorizedException('Invalid token');
 
-    // Map Firebase identity to local DB user
     const firebaseUid = decoded.uid;
     const email = decoded.email ?? undefined;
 
@@ -50,7 +49,6 @@ export class AuthService {
       };
     }
 
-    // If user already exists by email, bind firebase uid to it
     if (email) {
       const existingByEmail = await this.prisma.user.findUnique({
         where: { email },
@@ -71,8 +69,6 @@ export class AuthService {
       }
     }
 
-    // User is authenticated in Firebase, but not registered in our DB yet.
-    // This is handled by POST /api/auth/register.
     return { firebaseUid, role: 'USER', email };
   }
 

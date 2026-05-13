@@ -1,16 +1,18 @@
 import React from 'react';
 import {
-  AppBar,
   Avatar,
   Box,
   Button,
+  IconButton,
+  InputBase,
   Menu,
   MenuItem,
-  Toolbar,
+  Paper,
+  Stack,
   Typography,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Archive } from '@mui/icons-material';
+import { Archive, Search } from '@mui/icons-material';
 import { useAuth } from '../state/AuthContext';
 
 export default function Navbar() {
@@ -19,69 +21,88 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Archive sx={{ mr: 2 }} />
-        <Typography
-          variant="h6"
-          component={RouterLink}
-          to="/"
-          sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}
-        >
-          Проекты
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Button color="inherit" component={RouterLink} to="/">
-            Архив
+    <Paper
+      square
+      sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 40,
+        backgroundColor: 'rgba(255,255,255,0.75)',
+        backdropFilter: 'blur(12px)',
+      }}
+    >
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ maxWidth: 1400, mx: 'auto', px: 3, py: 1.5, gap: 2 }}
+      >
+        <Stack direction="row" alignItems="center" spacing={1.5}>
+          <Archive fontSize="small" color="primary" />
+          <Typography
+            variant="h6"
+            component={RouterLink}
+            to="/"
+            sx={{ textDecoration: 'none', color: 'text.primary', fontWeight: 800 }}
+          >
+            ITMO Digital Atheneum
+          </Typography>
+          <Button component={RouterLink} to="/" color="inherit">
+            Feed
           </Button>
           {user ? (
-            <Button color="inherit" component={RouterLink} to="/upload">
-              Загрузить
+            <Button component={RouterLink} to="/my-links" color="inherit">
+              My Projects
             </Button>
           ) : null}
+        </Stack>
 
-          {!user ? (
-            <>
-              <Button color="inherit" component={RouterLink} to="/login">
-                Войти
-              </Button>
-              <Button
-                color="inherit"
-                variant="outlined"
-                component={RouterLink}
-                to="/register"
-                sx={{
-                  borderColor: 'white',
-                  '&:hover': { borderColor: 'white' },
-                }}
-              >
-                Регистрация
-              </Button>
-            </>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Paper
+            sx={{
+              px: 1.5,
+              py: 0.25,
+              display: { xs: 'none', md: 'flex' },
+              alignItems: 'center',
+              bgcolor: '#f0edec',
+            }}
+          >
+            <Search sx={{ fontSize: 18, color: 'text.secondary', mr: 0.5 }} />
+            <InputBase placeholder="Search projects..." />
+          </Paper>
+          {userDb?.role === 'ADMIN' ? (
+            <Button component={RouterLink} to="/teacher" color="inherit">
+              Instructor Dashboard
+            </Button>
+          ) : null}
+          {user ? (
+            <Button variant="contained" component={RouterLink} to="/upload">
+              Create Project
+            </Button>
           ) : (
             <>
-              <Typography
-                variant="body2"
-                sx={{ display: { xs: 'none', md: 'block' } }}
-              >
-                {userDb ? `${userDb.firstName} ${userDb.lastName}` : user.email}
-              </Typography>
-              <Avatar
-                sx={{
-                  bgcolor: 'secondary.main',
-                  cursor: 'pointer',
-                  width: 36,
-                  height: 36,
-                }}
-                onClick={(e) => setAnchorEl(e.currentTarget)}
-              >
-                {(
-                  userDb?.firstName?.[0] ??
-                  user.email?.[0] ??
-                  'U'
-                ).toUpperCase()}
-              </Avatar>
+              <Button component={RouterLink} to="/login">
+                Login
+              </Button>
+              <Button variant="contained" component={RouterLink} to="/register">
+                Register
+              </Button>
+            </>
+          )}
+          {user ? (
+            <>
+              <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+                <Avatar
+                  sx={{
+                    bgcolor: 'secondary.main',
+                    width: 34,
+                    height: 34,
+                    fontSize: 14,
+                  }}
+                >
+                  {(userDb?.firstName?.[0] ?? user.email?.[0] ?? 'U').toUpperCase()}
+                </Avatar>
+              </IconButton>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -93,7 +114,7 @@ export default function Navbar() {
                     void nav('/profile');
                   }}
                 >
-                  Профиль
+                  Profile
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -101,7 +122,7 @@ export default function Navbar() {
                     void nav('/my-links');
                   }}
                 >
-                  Мои проекты
+                  My Links
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -111,13 +132,13 @@ export default function Navbar() {
                       .catch(() => {});
                   }}
                 >
-                  Выйти
+                  Logout
                 </MenuItem>
               </Menu>
             </>
-          )}
-        </Box>
-      </Toolbar>
-    </AppBar>
+          ) : null}
+        </Stack>
+      </Stack>
+    </Paper>
   );
 }

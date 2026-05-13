@@ -23,7 +23,7 @@ export class StorageService {
       !bucket ||
       !publicBaseUrl
     ) {
-      // Storage is configured via env; fail later on actual upload attempts
+
       this.s3 = new S3Client({ region });
       this.bucket = bucket ?? '';
       this.publicBaseUrl = publicBaseUrl ?? '';

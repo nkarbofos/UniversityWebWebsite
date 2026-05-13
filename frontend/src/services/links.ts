@@ -1,5 +1,5 @@
 import type { ApiClient } from './client';
-import type { LinkItem } from './types';
+import type { LinkBase, LinkWithRelations } from './types';
 
 export function linksService(api: ApiClient) {
   return {
@@ -16,7 +16,7 @@ export function linksService(api: ApiClient) {
       if (args.userId) qs.set('userId', args.userId);
       if (args.tagId) qs.set('tagId', args.tagId);
       if (args.courseId) qs.set('courseId', args.courseId);
-      return api.request<LinkItem[]>(`/api/links?${qs.toString()}`);
+      return api.request<LinkWithRelations[]>(`/api/links?${qs.toString()}`);
     },
     create: async (payload: {
       userId: string;
@@ -24,10 +24,27 @@ export function linksService(api: ApiClient) {
       linkName: string;
       githubPagesUrl: string;
     }) =>
-      api.request<LinkItem>('/api/links', {
+      api.request<LinkBase>('/api/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       }),
+    update: async (
+      id: string,
+      payload: { linkName?: string; githubPagesUrl?: string },
+    ) =>
+      api.request<LinkBase>(`/api/links/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }),
+    addTag: async (id: string, tagId: string) =>
+      api.request(`/api/links/${id}/tags/${tagId}`, { method: 'POST' }),
+    removeTag: async (id: string, tagId: string) =>
+      api.request(`/api/links/${id}/tags/${tagId}`, { method: 'DELETE' }),
+    addCourse: async (id: string, courseId: string) =>
+      api.request(`/api/links/${id}/courses/${courseId}`, { method: 'POST' }),
+    removeCourse: async (id: string, courseId: string) =>
+      api.request(`/api/links/${id}/courses/${courseId}`, { method: 'DELETE' }),
   };
 }

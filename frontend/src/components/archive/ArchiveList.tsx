@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { useApi } from '../../api/http';
 import { linksService } from '../../services/links';
-import type { LinkItem } from '../../services/types';
+import type { LinkWithRelations } from '../../services/types';
 import ArchiveCard from './ArchiveCard';
 import type { ArchiveFiltersValue } from './ArchiveFilters';
 
@@ -13,7 +13,7 @@ export default function ArchiveList({
 }) {
   const { request } = useApi();
   const api = useMemo(() => linksService({ request }), [request]);
-  const [items, setItems] = useState<LinkItem[]>([]);
+  const [items, setItems] = useState<LinkWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,15 +51,14 @@ export default function ArchiveList({
     <Box
       sx={{
         width: '100%',
-        mt: { xs: 2, sm: 4 },
+        mt: 1,
         display: 'grid',
         gridTemplateColumns: {
           xs: '1fr',
-          sm: 'repeat(2,1fr)',
-          md: 'repeat(3,1fr)',
-          lg: 'repeat(4,1fr)',
+          md: 'repeat(2,1fr)',
+          xl: 'repeat(3,1fr)',
         },
-        gap: { xs: 2, sm: 3 },
+        gap: { xs: 2, md: 3 },
       }}
     >
       {items.map((x) => (

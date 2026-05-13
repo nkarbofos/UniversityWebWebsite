@@ -115,8 +115,6 @@ export class LinksResolver {
     @Args('input') input: UpdateLinkInput,
   ): Promise<LinkGql> {
     return this.linksService.update(id, {
-      userId: input.userId,
-      reviewId: input.reviewId,
       linkName: input.linkName,
       githubPagesUrl: input.githubPagesUrl,
     });

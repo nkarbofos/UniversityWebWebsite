@@ -3,11 +3,10 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import {
   Box,
   CircularProgress,
-  Container,
   CssBaseline,
+  GlobalStyles,
   ThemeProvider,
   Typography,
-  createTheme,
 } from '@mui/material';
 import Navbar from './components/Navbar';
 import LoginPage from './pages/LoginPage';
@@ -17,7 +16,11 @@ import UploadPage from './pages/UploadPage';
 import ProfilePage from './pages/ProfilePage';
 import MyLinksPage from './pages/MyLinksPage';
 import UserProfilePage from './pages/UserProfilePage';
+import ProjectPage from './pages/ProjectPage';
+import TeacherDashboardPage from './pages/TeacherDashboardPage';
 import { useAuth } from './state/AuthContext';
+import { appTheme } from './theme';
+import { useLocation } from 'react-router-dom';
 
 function Protected({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -31,7 +34,7 @@ function Protected({ children }: { children: React.ReactNode }) {
       >
         <Box textAlign="center">
           <CircularProgress />
-          <Typography sx={{ mt: 2 }}>Загрузка...</Typography>
+          <Typography sx={{ mt: 2 }}>Loading...</Typography>
         </Box>
       </Box>
     );
@@ -39,23 +42,67 @@ function Protected({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-const theme = createTheme({
-  palette: {
-    primary: { main: '#1976d2' },
-    secondary: { main: '#dc004e' },
-  },
-});
+function AdminOnly({ children }: { children: React.ReactNode }) {
+  const { userDb } = useAuth();
+  if (userDb?.role !== 'ADMIN') return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
+function Sidebar() {
+  const { user } = useAuth();
+  if (!user) return null;
+  return (
+    <Box
+      component="aside"
+      sx={{
+        display: { xs: 'none', lg: 'flex' },
+        flexDirection: 'column',
+        width: 240,
+        bgcolor: '#f6f3f2',
+        p: 2,
+        borderRight: '1px solid rgba(116,118,133,0.15)',
+        position: 'sticky',
+        top: 72,
+        height: 'calc(100vh - 72px)',
+        gap: 1,
+      }}
+    >
+      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+        Workspace
+      </Typography>
+      <Typography variant="body2">My Projects</Typography>
+      <Typography variant="body2">Achievements</Typography>
+      <Typography variant="body2">Analytics</Typography>
+      <Typography variant="body2">Settings</Typography>
+    </Box>
+  );
+}
 
 export default function App() {
+  const location = useLocation();
+  const hideSidebar = ['/login', '/register'].includes(location.pathname);
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={appTheme}>
       <CssBaseline />
-      <Box
-        sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-      >
+      <GlobalStyles
+        styles={{
+          '::-webkit-scrollbar': { width: 4, height: 4 },
+          '::-webkit-scrollbar-thumb': {
+            backgroundColor: '#c4c5d6',
+            borderRadius: 8,
+          },
+          '.glass-panel': {
+            background: 'rgba(252, 248, 248, 0.7)',
+            backdropFilter: 'blur(12px)',
+          },
+        }}
+      />
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
         <Navbar />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Container sx={{ mt: 3, mb: 4, maxWidth: 'xl' }}>
+        <Box sx={{ display: 'flex', maxWidth: 1400, mx: 'auto', width: '100%' }}>
+          {!hideSidebar ? <Sidebar /> : null}
+          <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
             <Routes>
               <Route path="/" element={<ArchiveHomePage />} />
               <Route path="/login" element={<LoginPage />} />
@@ -84,17 +131,21 @@ export default function App() {
                   </Protected>
                 }
               />
+              <Route path="/user/:userId" element={<UserProfilePage />} />
+              <Route path="/project/:linkId" element={<ProjectPage />} />
               <Route
-                path="/user/:userId"
+                path="/teacher"
                 element={
                   <Protected>
-                    <UserProfilePage />
+                    <AdminOnly>
+                      <TeacherDashboardPage />
+                    </AdminOnly>
                   </Protected>
                 }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </Container>
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>

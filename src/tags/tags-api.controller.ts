@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Res,
 } from '@nestjs/common';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
@@ -21,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { UseInterceptors } from '@nestjs/common';
 import { buildPaginationLinks } from '../common/pagination/pagination';
 import { CreateTagDto } from './dto/create-tag.dto';
@@ -62,6 +63,7 @@ export class TagsApiController {
   @Get()
   async findAll(
     @Query() query: TagsQueryDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const page = query.page ?? 1;

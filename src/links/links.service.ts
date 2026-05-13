@@ -144,12 +144,10 @@ export class LinksService {
     return rows.map((r) => r.course);
   }
 
-  update(id: string, dto: UpdateLinkDto) {
+  update(id: string, dto: Pick<UpdateLinkDto, 'linkName' | 'githubPagesUrl'>) {
     return this.prisma.link.update({
       where: { id },
       data: {
-        userId: dto.userId,
-        reviewId: dto.reviewId,
         linkName: dto.linkName,
         githubPagesUrl: dto.githubPagesUrl,
       },

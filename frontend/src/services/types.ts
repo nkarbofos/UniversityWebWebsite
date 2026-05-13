@@ -12,11 +12,17 @@ export type UserDb = {
 export type Tag = { id: string; name: string };
 export type Course = { id: string; name: string; code?: string | null };
 
-export type LinkItem = {
+export type LinkBase = {
   id: string;
   userId: string;
   reviewId?: string | null;
   linkName: string;
   githubPagesUrl: string;
   createdAt: string;
+};
+
+export type LinkWithRelations = LinkBase & {
+  user: UserDb;
+  tags: { tag: Tag }[];
+  courses: { course: Course }[];
 };
